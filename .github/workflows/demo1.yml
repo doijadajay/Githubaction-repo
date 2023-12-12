@@ -1,4 +1,4 @@
-name: Basic Directory Creation Job
+name: Clone Repository and Create Project Directory
 
 on:
   push:
@@ -6,9 +6,19 @@ on:
       - main # Adjust branch as needed
 
 jobs:
-  create-directory:
+  clone-repo:
     runs-on: self-hosted
 
     steps:
-      - name: Create Directory
-        run: sudo mkdir -p /mnt/ajay
+      - name: Checkout code
+        uses: actions/checkout@v2 # Alternatively, you can run 'git clone' directly
+
+      - name: Clone repository to /mnt
+        run: |
+          sudo mkdir -p /mnt/project
+          cd /mnt/project
+          git clone https://github.com/doijadajay/game-of-life.git .
+          # Replace the URL with your repository URL
+
+      - name: List cloned directory
+        run: ls -l /mnt/project # List the cloned directory to verify it's been cloned
