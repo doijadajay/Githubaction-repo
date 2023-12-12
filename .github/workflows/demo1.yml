@@ -15,10 +15,16 @@ jobs:
 
       - name: Clone repository to /mnt
         run: |
+          sudo rm -rf /mnt/project
           sudo mkdir -p /mnt/project
           cd /mnt/project
           sudo git clone https://github.com/doijadajay/game-of-life.git .
           # Replace the URL with your repository URL
+
+      - name: Build with Maven
+        working-directory: /mnt/project
+        run: sudo mvn clean install
+
 
       - name: List cloned directory
         run: ls -l /mnt/project # List the cloned directory to verify it's been cloned
