@@ -17,7 +17,7 @@ jobs:
         run: |
           sudo mkdir -p /mnt/project
           cd /mnt/project
-          git clone https://github.com/doijadajay/game-of-life.git .
+          sudo git clone https://github.com/doijadajay/game-of-life.git .
           # Replace the URL with your repository URL
 
       - name: List cloned directory
