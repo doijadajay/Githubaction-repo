@@ -11,4 +11,4 @@ jobs:
 
     steps:
       - name: Create Directory
-        run: mkdir -p /mnt/ajay
+        run: sudo mkdir -p /mnt/ajay
