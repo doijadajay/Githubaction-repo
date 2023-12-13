@@ -1,4 +1,4 @@
-name: Maven Build
+name: MySQL Docker to ECR
 
 on:
   push:
@@ -6,23 +6,26 @@ on:
       - main
 
 jobs:
-  build:
+  build-and-push:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Clone Game of Life repository
-        run: git clone https://github.com/doijadajay/game-of-life.git
-
-      - name: Set up JDK
-        uses: actions/setup-java@v2
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
         with:
-          java-version: '11'
-          distribution: 'adopt'
+          registry: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.ap-south-1.amazonaws.com
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
-      - name: Build with Maven
-        run: |
-          cd game-of-life
-          mvn clean install
+      - name: Pull MySQL Docker image
+        run: docker pull mysql:latest
+
+      - name: Tag Docker image
+        run: docker tag mysql:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.ap-south-1.amazonaws.com/mysql:latest
+
+      - name: Push Docker image to Amazon ECR
+        run: docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.ap-south-1.amazonaws.com/mysql:latest
