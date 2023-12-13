@@ -1,30 +1,28 @@
-name: Clone Repository and Create Project Directory
+name: Maven Build
 
 on:
   push:
     branches:
-      - main # Adjust branch as needed
+      - main
 
 jobs:
-  clone-repo:
-    runs-on: self-hosted
+  build:
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2 # Alternatively, you can run 'git clone' directly
+        uses: actions/checkout@v2
 
-      - name: Clone repository to /mnt
-        run: |
-          sudo rm -rf /mnt/project
-          sudo mkdir -p /mnt/project
-          cd /mnt/project
-          sudo git clone https://github.com/doijadajay/game-of-life.git .
-          # Replace the URL with your repository URL
+      - name: Clone Game of Life repository
+        run: git clone https://github.com/doijadajay/game-of-life.git
+        # Replace 'your-username' with your actual GitHub username
+
+      - name: Set up JDK
+        uses: actions/setup-java@v2
+        with:
+          java-version: '11'
 
       - name: Build with Maven
-        working-directory: /mnt/project
-        run: sudo mvn clean install
-
-
-      - name: List cloned directory
-        run: ls -l /mnt/project # List the cloned directory to verify it's been cloned
+        run: |
+          cd game-of-life  # Move into the cloned directory
+          mvn clean install
