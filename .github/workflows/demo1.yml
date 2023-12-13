@@ -14,15 +14,15 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Clone Game of Life repository
-        run: sudo git clone https://github.com/doijadajay/game-of-life.git
-        # Replace 'your-username' with your actual GitHub username
+        run: git clone https://github.com/doijadajay/game-of-life.git
 
       - name: Set up JDK
         uses: actions/setup-java@v2
         with:
           java-version: '11'
+          distribution: 'adopt'
 
       - name: Build with Maven
         run: |
-          cd game-of-life  # Move into the cloned directory
+          cd game-of-life
           mvn clean install
