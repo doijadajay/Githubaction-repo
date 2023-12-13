@@ -14,7 +14,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Clone Game of Life repository
-        run: sudo git https://github.com/doijadajay/game-of-life.git
+        run: sudo git clone https://github.com/doijadajay/game-of-life.git
         # Replace 'your-username' with your actual GitHub username
 
       - name: Set up JDK
