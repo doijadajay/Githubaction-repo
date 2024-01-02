@@ -1,32 +1,34 @@
-name: MySQL Docker to ECR
+name: Clone and Maven Build
 
 on:
   push:
     branches:
-      - main
+      - main  # Adjust branch name if needed
+  pull_request:
+    branches:
+      - main  # Adjust branch name if needed
 
 jobs:
-  build-and-push:
+  build:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+      - name: Create project directory
+        run: mkdir project
 
-      - name: Login to Amazon ECR
-        id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v1
+      - name: Change to project directory
+        run: cd project
+
+      - name: Clone repository
+        run: git clone https://github.com/doijadajay/game-of-life.git
+
+      - name: Set up JDK 8
+        uses: actions/setup-java@v2
         with:
-          registry: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.ap-south-1.amazonaws.com
-          region: ap-south-1
-          registry-type: 'AWS'
-          # Remove aws-access-key-id and aws-secret-access-key inputs
+          distribution: 'adopt'
+          java-version: '8'  # Use Java 8
 
-      - name: Pull MySQL Docker image
-        run: docker pull mysql:latest
-
-      - name: Tag Docker image
-        run: docker tag mysql:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.ap-south-1.amazonaws.com/mysql:latest
-
-      - name: Push Docker image to Amazon ECR
-        run: docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.ap-south-1.amazonaws.com/mysql:latest
+      - name: Build with Maven (clean and skip tests)
+        run: |
+          cd game-of-life  # Change directory to the cloned repository
+          mvn -B clean package -DskipTests
